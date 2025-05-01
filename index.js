@@ -14,6 +14,25 @@ const persoaneRoutes = require('./routes/persoane');
 app.use('/api/persoane', persoaneRoutes);
 
 
+const utilizatoriRoutes = require('./routes/utilizatori');
+app.use('/api/utilizatori', utilizatoriRoutes);
+
+const examinareRoutes = require('./routes/examinare');
+app.use('/api/examinare', examinareRoutes);
+
+const intrebariRoutes = require('./routes/intrebari');
+app.use('/api/intrebari', intrebariRoutes);
+
+const marcajeRoutes = require('./routes/marcaje');
+app.use('/api/marcaje', marcajeRoutes);
+
+const dateRoutes = require('./routes/date');
+app.use('/api/date', dateRoutes);
+
+const testRoutes = require('./routes/test');
+app.use('/api/test', testRoutes);
+
+
 // Test route
 app.get('/', (req, res) => {
     res.send(' Backend-ul este activ!');

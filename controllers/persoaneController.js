@@ -1,38 +1,34 @@
 const db = require('../db');
 
-// GET /api/persoane
+// GET: listare persoane
 exports.getPersoane = (req, res) => {
-    const sql = 'SELECT * FROM persoane';
-    db.all(sql, [], (err, rows) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.json({ persoane: rows });
-    });
+  db.all('SELECT * FROM persoane', [], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ persoane: rows });
+  });
 };
 
-// POST /api/persoane
+// POST: adăugare persoană
 exports.addPersoana = (req, res) => {
-    const {
-        id_pers, nume, prenume, email,
-        nr_tel, cnp, data_creare, data_nastere, pers_fizica
-    } = req.body;
+  const {
+    id_pers, nume, prenume, email,
+    nr_tel, cnp, data_nastere
+  } = req.body;
 
-    const sql = `
-        INSERT INTO persoane (
-            id_pers, nume, prenume, email, nr_tel, cnp,
-            data_creare, data_nastere, pers_fizica
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    const values = [
-        id_pers, nume, prenume, email,
-        nr_tel, cnp, data_creare, data_nastere, pers_fizica
-    ];
+  if (!id_pers || !nume || !prenume || !nr_tel || !cnp || !data_nastere) {
+    return res.status(400).json({ error: 'Toate câmpurile obligatorii trebuie completate.' });
+  }
 
-    db.run(sql, values, function (err) {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        res.status(201).json({ message: 'Persoană adăugată cu succes', id: id_pers });
-    });
+  const sql = `
+    INSERT INTO persoane (
+      id_pers, nume, prenume, email,
+      nr_tel, cnp, data_nastere
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+  const values = [id_pers, nume, prenume, email, nr_tel, cnp, data_nastere];
+
+  db.run(sql, values, function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    res.status(201).json({ message: 'Persoană adăugată cu succes', id: id_pers });
+  });
 };
