@@ -1,6 +1,6 @@
 const db = require('../db');
 
-// GET: toate valorile
+// GET toate datele
 exports.getDate = (req, res) => {
   db.all('SELECT * FROM date_fiziologice', [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -28,4 +28,8 @@ exports.addDate = (req, res) => {
     if (err) return res.status(500).json({ error: err.message });
     res.status(201).json({ message: 'Valori înregistrate', id: this.lastID });
   });
+};
+
+module.exports = {
+  getDate,
 };
