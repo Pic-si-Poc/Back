@@ -68,29 +68,16 @@ db.serialize(() => {
       )
     `);
   
-    // TABEL: intrebari_examen
-    db.run(`
-      CREATE TABLE intrebari_examen (
-        id_intr_exam TEXT PRIMARY KEY,
-        id_exam TEXT NOT NULL,
-        text_intrebare TEXT NOT NULL,
-        tip TEXT NOT NULL, -- ex: 'control', 'relevanta'
-        start_citire TEXT,
-        timp_raspuns TEXT,
-        raspuns_sincer INTEGER NOT NULL,
-        FOREIGN KEY (id_exam) REFERENCES examinare(id_exam)
-      )
-    `);
-  
     // TABEL: marcaje_timp
     db.run(`
       CREATE TABLE marcaje_timp (
         id_marcaj INTEGER PRIMARY KEY AUTOINCREMENT,
         id_intr_exam TEXT NOT NULL,
-        timestamp TEXT NOT NULL,
-        FOREIGN KEY (id_intr_exam) REFERENCES intrebari_examen(id_intr_exam)
+        timestamp TEXT NOT NULL
+        -- FOREIGN KEY eliminat deoarece intrebari_examen nu mai există
       )
     `);
+
   
     // TABEL: date_fiziologice
     db.run(`

@@ -20,9 +20,6 @@ app.use('/api/utilizatori', utilizatoriRoutes);
 const examinareRoutes = require('./routes/examinare');
 app.use('/api/examinare', examinareRoutes);
 
-const intrebariRoutes = require('./routes/intrebari');
-app.use('/api/intrebari', intrebariRoutes);
-
 const marcajeRoutes = require('./routes/marcaje');
 app.use('/api/marcaje', marcajeRoutes);
 
