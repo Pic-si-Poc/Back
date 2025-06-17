@@ -1,7 +1,7 @@
 const db = require('../db');
 
 // GET toate datele
-exports.getDate = (req, res) => {
+const getDate = (req, res) => {
   db.all('SELECT * FROM date_fiziologice', [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json({ date: rows });
@@ -9,7 +9,7 @@ exports.getDate = (req, res) => {
 };
 
 // POST: adaugă un set de date
-exports.addDate = (req, res) => {
+const addDate = (req, res) => {
   const { id_exam, timestamp, valoare_emg, valoare_ecg, valoare_umiditate } = req.body;
 
   if (!id_exam || !timestamp) {
@@ -22,9 +22,7 @@ exports.addDate = (req, res) => {
     ) VALUES (?, ?, ?, ?, ?)
   `;
 
-  db.run(sql, [
-    id_exam, timestamp, valoare_emg, valoare_ecg, valoare_umiditate
-  ], function (err) {
+  db.run(sql, [id_exam, timestamp, valoare_emg, valoare_ecg, valoare_umiditate], function (err) {
     if (err) return res.status(500).json({ error: err.message });
     res.status(201).json({ message: 'Valori înregistrate', id: this.lastID });
   });
@@ -32,4 +30,5 @@ exports.addDate = (req, res) => {
 
 module.exports = {
   getDate,
+  addDate,
 };
