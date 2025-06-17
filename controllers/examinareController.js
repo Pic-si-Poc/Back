@@ -47,8 +47,52 @@ const startExaminare = (req, res) => {
   });
 };
 
+// GET: rezultate test cu detalii despre persoană
+const getRezultate = (req, res) => {
+  const sql = `
+    SELECT e.id_exam, p.nume, p.prenume, e.nume_beneficiar, e.data_start AS dataTestare
+    FROM examinare e
+    JOIN persoane p ON e.id_examinat = p.id_pers
+    ORDER BY e.data_start DESC
+  `;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) {
+      console.error('Eroare la preluarea rezultatelor:', err.message); // important!
+      return res.status(500).json({ error: 'Eroare server la preluare rezultate.' });
+    }
+    res.json({ rezultate: rows });
+  });
+};
+
+// GET: statistici pentru pagină
+const getStatistici = (req, res) => {
+  const sql = `
+    SELECT e.id_exam, p.nume, e.nume_beneficiar AS beneficiar, date(e.data_start) AS data,
+           SUM(CASE WHEN m.tip = 'Sincer' THEN 1 ELSE 0 END) AS sincer,
+           SUM(CASE WHEN m.tip = 'Nesincer' THEN 1 ELSE 0 END) AS nesincer,
+           SUM(CASE WHEN m.tip = 'Control' THEN 1 ELSE 0 END) AS control
+    FROM examinare e
+    JOIN persoane p ON p.id_pers = e.id_examinat
+    LEFT JOIN marcaje_timp m ON m.id_exam = e.id_exam
+    GROUP BY e.id_exam
+    ORDER BY e.data_start DESC
+  `;
+
+  db.all(sql, [], (err, rows) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ statistici: rows });
+  });
+};
+
+
+
+
 module.exports = {
   getExam,
   addExam,
   startExaminare,
+  getRezultate,
+  getStatistici,
 };
+

@@ -32,3 +32,33 @@ exports.addPersoana = (req, res) => {
     res.status(201).json({ message: 'Persoană adăugată cu succes', id: id_pers });
   });
 };
+
+// PUT: editare persoană
+exports.updatePersoana = (req, res) => {
+  const { id } = req.params;
+  const { nume, prenume, email, nr_tel, cnp, data_nastere } = req.body;
+
+  const sql = `
+    UPDATE persoane
+    SET nume = ?, prenume = ?, email = ?, nr_tel = ?, cnp = ?, data_nastere = ?
+    WHERE id_pers = ?
+  `;
+  const values = [nume, prenume, email, nr_tel, cnp, data_nastere, id];
+
+  db.run(sql, values, function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Persoană actualizată cu succes' });
+  });
+};
+
+// DELETE: ștergere persoană
+exports.deletePersoana = (req, res) => {
+  const { id } = req.params;
+
+  const sql = `DELETE FROM persoane WHERE id_pers = ?`;
+
+  db.run(sql, [id], function (err) {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Persoană ștearsă cu succes' });
+  });
+};
