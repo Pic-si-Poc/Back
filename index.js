@@ -101,8 +101,39 @@ app.use('/api/date', requireLogin, dateRoutes);
 app.use('/api/test', requireLogin, testRoutes);
 
 
+// ... toate celelalte rute ...
+
+app.use('/api/test', requireLogin, testRoutes);
+
+// AICI INSERI CODUL NOU
+let liveSensorData = null;
+
+app.post('/api/live-data', (req, res) => {
+  const { ecg, emg, temperature, humidity } = req.body;
+
+  if (!ecg || !emg) {
+    return res.status(400).json({ error: 'Date invalide de la senzori.' });
+  }
+
+  liveSensorData = {
+    ecg,
+    emg,
+    temperature,
+    humidity,
+    timestamp: new Date().toISOString(),
+  };
+
+  console.log("Date live primite:", liveSensorData);
+  res.status(200).json({ success: true });
+});
+
+app.get('/api/live-data', (req, res) => {
+  res.json(liveSensorData || {});
+});
+
 // Pornire server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(` Server pornit la adresa http://localhost:${PORT}`);
 });
+
