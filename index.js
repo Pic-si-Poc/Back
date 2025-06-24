@@ -49,6 +49,9 @@ app.use('/api/test', testRoutes);
 const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
+const aiRoutes = require('./routes/ai');
+app.use('/api', aiRoutes);
+
 // Rute de test
 app.get('/', (req, res) => {
   res.send(' Backend-ul este activ!');
