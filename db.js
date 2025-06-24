@@ -23,6 +23,7 @@ db.serialize(() => {
     db.run(`DROP TABLE IF EXISTS test`);
     db.run(`DROP TABLE IF EXISTS persoane`);
     db.run(`DROP TABLE IF EXISTS utilizatori`);
+    db.run(`DROP TABLE IF EXISTS ai_samples`);
     
 
     // TABEL: utilizatori
@@ -93,7 +94,24 @@ db.serialize(() => {
       )
     `);
 
+    // TABEL: ai_samples
+    db.run(`
+      CREATE TABLE IF NOT EXISTS ai_samples (
+        id_sample INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_exam TEXT NOT NULL,
+        start_time TEXT NOT NULL,
+        end_time TEXT NOT NULL,
+        label TEXT NOT NULL, -- 'sincer' / 'nesincer' / 'control'
+        ecg_data TEXT NOT NULL,
+        emg_data TEXT NOT NULL,
+        temp_data TEXT NOT NULL,
+        humidity_data TEXT NOT NULL,
+        FOREIGN KEY (id_exam) REFERENCES examinare(id_exam)
+      )
+    `);
+
     console.log("Tabelele au fost recreate complet.");*/
+
 });
 
 module.exports = db;
