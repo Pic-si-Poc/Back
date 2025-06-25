@@ -85,7 +85,27 @@ const getStatistici = (req, res) => {
   });
 };
 
+// DELETE: șterge o examinare + datele asociate
+const deleteExaminare = (req, res) => {
+  const { id_exam } = req.params;
 
+  if (!id_exam) return res.status(400).json({ error: 'ID test lipsă.' });
+
+  db.serialize(() => {
+    db.run('DELETE FROM date_fiziologice WHERE id_exam = ?', [id_exam], function (err) {
+      if (err) return res.status(500).json({ error: 'Eroare la ștergerea datelor fiziologice.' });
+    });
+
+    db.run('DELETE FROM marcaje_timp WHERE id_exam = ?', [id_exam], function (err) {
+      if (err) return res.status(500).json({ error: 'Eroare la ștergerea marcajelor.' });
+    });
+
+    db.run('DELETE FROM examinare WHERE id_exam = ?', [id_exam], function (err) {
+      if (err) return res.status(500).json({ error: 'Eroare la ștergerea examinării.' });
+      res.json({ message: 'Testul a fost șters cu tot cu date asociate.' });
+    });
+  });
+};
 
 
 module.exports = {
@@ -94,5 +114,6 @@ module.exports = {
   startExaminare,
   getRezultate,
   getStatistici,
+  deleteExaminare,
 };
 
